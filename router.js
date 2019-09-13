@@ -12,10 +12,20 @@ function factory (stream) {
     console.log('data:', data)
 
     stream.updateInit(data)
-    stream.init(req, res)
+    return stream.init(req, res)
   }
 
   router.get('/stream', onStream)
+
+function onMessage (req, res) {
+  const { text } = req.body
+  messages.push(text)
+  const data = JSON.stringify(messages)
+  stream.send(data)
+  return res.send(text)
+}
+
+  router.post('/message', onMessage)
 
   return router
 }
